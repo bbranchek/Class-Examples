@@ -1,0 +1,47 @@
+Querying training
+https://itziktsql.com/advanced-t-sql-course
+
+Admin Training for consideration
+https://www.brentozar.com/product/database-administration-training/
+review of his training
+https://www.reddit.com/r/sysadmin/comments/xt4uel/sql_server_administration_training/?rdt=37283
+
+Powerpoint slides at:
+coursehero.com/file/111009263/20764C-ENU-TrainerHandbookpdf/
+
+third-party tools for SQL Server event logging
+https://www.manageengine.com/products/eventlog/
+https://www.apexsql.com/products/sql-tools-audit/
+
+Always encrypted documentation tutorial
+https://learn.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-tutorial-getting-started?view=sql-server-ver16&tabs=ssms
+
+to restart SQL Server if it was shutdown due to audit failure and a setting of shutdown if it can't record the event
+
+page restore
+https://learn.microsoft.com/en-us/sql/relational-databases/backup-restore/restore-pages-sql-server?view=sql-server-ver16
+
+snapshot restore
+https://learn.microsoft.com/en-us/sql/relational-databases/databases/revert-a-database-to-a-database-snapshot?view=sql-server-ver16
+
+
+To find the name of a sql server server audit
+select name from sys.server_audits
+
+https://msdn.microsoft.com/en-us/library/ms189573.aspx
+ 
+SQL Server backup and maintenance scripts 
+https://ola.hallengren.com/
+
+DBCC
+https://learn.microsoft.com/en-us/sql/t-sql/database-console-commands/dbcc-checkdb-transact-sql?view=sql-server-ver16
+
+new version of Powershell 7.5
+https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5
+
+Possibly useful free tools and other products
+redgate.com
+
+DAC
+https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/diagnostic-connection-for-database-administrators?view=sql-server-ver16
+https://www.sqlshack.com/sql-server-dedicated-admin-connection-dac-how-to-enable-connect-and-use/

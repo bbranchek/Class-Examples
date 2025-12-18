@@ -1,0 +1,34 @@
+checkpoint types
+https://msdn.microsoft.com/en-us/library/ms189573.aspx
+
+Powerpoint slides at:
+coursehero.com/file/111009263/20764C-ENU-TrainerHandbookpdf/
+
+Migrate SQL Server 2012 to 2019  
+dbsection.com/how-to-upgrade-sqlserver-2012-to-2019/
+also the Microsoft Data Migration Assistant  (downloadable)
+
+
+Virtual log files
+https://learn.microsoft.com/en-us/sql/relational-databases/sql-server-transaction-log-architecture-and-management-guide?view=sql-server-ver16
+
+Clustering SQL Server
+https://learn.microsoft.com/en-us/sql/sql-server/failover-clusters/windows/always-on-failover-cluster-instances-sql-server?view=sql-server-ver16
+https://www.brentozar.com/archive/2012/02/introduction-sql-server-clusters/
+https://www.mssqltips.com/sqlservertip/1541/getting-started-with-sql-server-clustering/
+https://www.mssqltips.com/sqlservertip/6586/clustering-sql-server-2019-step-by-step/
+
+DBCC
+https://learn.microsoft.com/en-us/sql/t-sql/database-console-commands/dbcc-checkdb-transact-sql?view=sql-server-ver16
+
+Alternate maintenance plan for sql server 
+https://ola.hallengren.com/
+
+Sargable Queries on Transact-SQL  - can use an index
+https://www.sqlshack.com/how-to-use-sargable-expressions-in-t-sql-queries-performance-advantages-and-examples/
+
+Best Security Practices for SQL Server databases
+https://learn.microsoft.com/en-us/sql/relational-databases/security/sql-server-security-best-practices?view=sql-server-ver16
+Topics Day 3
+
+

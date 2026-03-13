@@ -1,0 +1,5 @@
+1. Write a program the is called futurevalue.  It will prompt for an initial amount for investment, the percent of return, and the number of years for create value. It will then display the amount returned. The user can enter yes to enter the 3 amounts again to recalculate the returned amount or x to exit.
+
+2. Write a program to prompt for the number of miles driven, the number of gallons used, and cost per gallon and the display the total gas cost  and the cost per mile.
+
+3. Write a program to prompt for test scores until the user enters exit and then displays all the test score, the average score, the median score, and the total score.

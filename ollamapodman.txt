@@ -1,0 +1,225 @@
+Running Ollama inside a Podman container is not just a “nice-to-have”—it solves several real engineering problems that show up in multi‑device GPU setups like yours (Jetson Orin ↔ Ubuntu ↔ Mac Mini). The short answer:
+
+    You containerize Ollama to gain isolation, reproducibility, portability, and clean GPU/runtime control.
+
+Below is the full breakdown, structured for your workflow and with Guided Links embedded so you can dive deeper into any part.
+Why people run Ollama in Podman (and why you benefit most)
+1. Runtime isolation
+
+Native Ollama installs:
+
+    systemd services
+
+    host-level CUDA dependencies
+
+    model storage under /usr/share/ollama
+
+    binaries under /usr/local/bin
+
+This pollutes the host and can conflict with:
+
+    Jetson-specific CUDA versions
+
+    Ubuntu CUDA toolkits
+
+    Mac Mini remote inference routing
+
+A container isolates all of this.
+2. Reproducible environments
+
+You freeze:
+
+    Ollama version
+
+    CUDA runtime
+
+    environment variables
+
+    model directory
+
+This means your Jetson, Pi, Ubuntu, and Mac Mini all behave identically.
+3. Portability across machines
+
+You can move the exact same container image between:
+
+    Jetson Orin
+
+    Ubuntu workstation
+
+    Raspberry Pi (CPU-only)
+
+    Mac Mini (via remote API)
+
+No reinstalling. No dependency mismatches.
+4. GPU runtime control
+
+Podman lets you explicitly choose GPU runtime flags:
+
+    Jetson: --runtime nvidia
+
+    Ubuntu: --gpus all
+
+This avoids the classic “host CUDA mismatch” errors that native Ollama sometimes triggers.
+5. Security advantages
+
+Podman is rootless:
+
+    no daemon
+
+    SELinux/AppArmor confinement
+
+    no privileged background service
+
+This matters when exposing the Ollama API on your LAN.
+6. Easy rollback & upgrades
+
+Native upgrades can break CUDA or model paths.
+
+Container upgrades are trivial:
+
+    stop container
+
+    pull new image
+
+    start new container
+
+Models persist via mounted volume.
+7. Custom model storage
+
+You mount your SSD/NVMe directly:
+bash
+
+
+
+
+[bobb@centos9 ~]$ sudo dnf install podman -y
+[sudo] password for bobb: 
+Last metadata expiration check: 0:09:05 ago on Wed 05 Aug 2026 03:42:00 PM EDT.
+Package podman-6:5.8.5-1.el9.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+
+[bobb@centos9 ~]$ podman --version
+
+podman version 5.8.5
+
+[bobb@centos9 ~]$ podman volume create ollama_storage
+ollama_storage
+
+
+
+
+[bobb@centos9 ~]$ podman pull docker://docker.io/ollama/ollama:latest
+Trying to pull docker.io/ollama/ollama:latest...
+Getting image source signatures
+Copying blob 1d42b9ea7560 done   | 
+Copying blob 733602a186b4 done   | 
+Copying blob 966c395d29cb done   | 
+Copying blob 7d1c8af65e66 done   | 
+Copying config cdcad7aac0 done   | 
+Writing manifest to image destination
+cdcad7aac04c5201de7de9e6962cba0f2c72d51a0971a48127cf3c401e30157c
+
+[bobb@centos9 ~]$ podman run -d \
+-v ollama_storage:/root/.ollama \
+-p 11434:11434 \
+--name ollama \
+ollama/ollama
+90f10794a50d4c5da481964b660f14dfd6c9e27302130faaedc62124c9c92fd8
+[bobb@centos9 ~]$ podman exec -it ollama ollama run llama3
+pulling manifest 
+pulling 6a0746a1ec1a: 100% ▕████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████ ▏ 4.7 GB/4.7 GB  108 MB/s      0s
+verifying sha256 digest 
+writing manifest 
+success 
+>>> tell me a story about a robot that learns to paint
+What an intriguing request! Here's a tale about a robot named Robby, who discovers the joy of painting:
+
+In the year 2050, a team of brilliant engineers at TechCorp created Robby, a cutting-edge humanoid robot designed for assembly-line work. Robby's creators believed that by giving him advanced 
+sensors and processing power, he could learn to perform complex tasks with precision and speed...
+...
+
+
+>>> /bye
+
+[bobb@centos9 ~]$ podman ps
+CONTAINER ID  IMAGE                           COMMAND     CREATED         STATUS         PORTS                     NAMES
+90f10794a50d  docker.io/ollama/ollama:latest  serve       13 minutes ago  Up 13 minutes  0.0.0.0:11434->11434/tcp  ollama
+[bobb@centos9 ~]$ curl http://localhost:11434/api/generate -d '{
+"model": "llama3",
+"prompt": "Why use containers?",
+"stream": false
+}'
+
+
+
+
+{"model":"llama3","created_at":"2026-08-05T20:37:57.949319319Z","response":"Containers, also known as containerization, have become increasingly popular in recent years, and for good reason...
+...
+[bobb@centos9 ~]$ 
+
+
+
+
+
+
+
+
+
+podman exec -it ollama ollama run llama3
+
+
+
+It executes a command inside a running Podman container named ollama, opens an interactive shell, and then runs the Llama‑3 model through Ollama inside that container.
+
+
+
+🔍 Breakdown of each part
+1. podman exec
+
+Runs a command inside an already-running container.
+2. -it
+
+    -i → interactive (keeps STDIN open)
+
+    -t → allocate a pseudo‑TTY
+    This lets you talk to the model interactively.
+
+3. Container name: ollama
+
+This tells Podman which container to enter.
+4. Command inside the container: ollama run llama3
+
+Runs the Llama‑3 model using the Ollama runtime installed inside the container.
+
+If the model isn’t already pulled, Ollama will download it first.
+🧠 What actually happens on your system
+
+    Podman attaches your terminal to the container.
+
+    Inside the container, it launches the Ollama CLI.
+
+    Ollama loads the llama3 model.
+
+    You get an interactive prompt where you can type messages to the model.
+
+
+[bobb@centos9 ~]$ podman exec -it ollama ollama run llama3
+>>> /bye
+[bobb@centos9 ~]$ ps
+    PID TTY          TIME CMD
+  30314 pts/0    00:00:00 bash
+  32811 pts/0    00:00:00 ps
+[bobb@centos9 ~]$ ollama run llama3
+bash: ollama: command not found...
+[bobb@centos9 ~]$ podman exec -it ollama /bin/bash
+root@90f10794a50d:/# ollama run llama3
+>>> /bye
+root@90f10794a50d:/# 
+root@90f10794a50d:/# exit
+exit
+
+
+
+

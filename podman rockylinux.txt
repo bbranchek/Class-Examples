@@ -1,0 +1,213 @@
+[student@redhat90 ~]$ podman pull rockylinux/rockylinux:9
+
+✔ docker.io/rockylinux/rockylinux:9
+Trying to pull docker.io/rockylinux/rockylinux:9...
+Getting image source signatures
+Copying blob 99c753a880cc done  
+Copying config 686e4558d0 done  
+Writing manifest to image destination
+Storing signatures
+686e4558d0a5332a32cf8a4722fc4e3143bab0b6156e14792191161ae0bb78f4
+
+[student@redhat90 ~]$ podman images
+
+REPOSITORY                       TAG         IMAGE ID      CREATED       SIZE
+docker.io/rockylinux/rockylinux  9           686e4558d0a5  4 months ago  244 MB
+
+[student@redhat90 ~]$ podman inspect docker.io/rockylinux/rockylinux:9 
+[
+     {
+          "Id": "686e4558d0a5332a32cf8a4722fc4e3143bab0b6156e14792191161ae0bb78f4",
+          "Digest": "sha256:8101994123cf3d0a8fee517bee7f39e555c7d92bd2d9eb3303cc988a0eeed00f",
+          "RepoTags": [
+               "docker.io/rockylinux/rockylinux:9"
+          ],
+          ...
+          
+
+[student@redhat90 ~]$ podman run --rm docker.io/rockylinux/rockylinux:9 cat /etc/passwd
+
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
+tss:x:59:59:Account used for TPM access:/:/usr/sbin/nologin 
+
+[student@redhat90 ~]$ podman run --rm -it docker.io/rockylinux/rockylinux:9 /bin/bash
+
+[root@c2d77ce7a81e /]# hostname
+c2d77ce7a81e
+[root@c2d77ce7a81e /]# whoami
+root
+[root@c2d77ce7a81e /]# pwd
+/
+[root@c2d77ce7a81e /]# 
+
+.............................. IN ANOTHER TERMINAL WINDOW...........................................
+
+<pre>[student@redhat90 ~]$ podman ps -a
+
+CONTAINER ID  IMAGE                              COMMAND     CREATED        STATUS            PORTS       NAMES
+c2d77ce7a81e  docker.io/rockylinux/rockylinux:9  /bin/bash   2 minutes ago  Up 2 minutes ago              hungry_shamir
+
+
+CREATED ANOTHER INSTANCE OF THE CONTAINER
+
+[student@redhat90 ~]$ podman exec -it c2d77ce7a81e /bin/bash
+
+[root@c2d77ce7a81e /]#
+[root@c2d77ce7a81e /]# exit
+exit
+
+[student@redhat90 ~]$ podman run --name=mycontainer -it docker.io/rockylinux/rockylinux:9 /bin/bash
+
+[root@d28cb41045e9 /]# 
+
+
+........................................IN A THIRD TERMINAL WINDOW.....................................................
+
+[student@redhat90 ~]$ podman attach mycontainer
+[root@d28cb41045e9 /]# 
+
+........................................IN A FOURTH TERMINAL WINDOW.....................................................
+
+
+
+[student@redhat90 ~]$ podman ps -a
+
+CONTAINER ID  IMAGE                              COMMAND     CREATED         STATUS             PORTS       NAMES
+c2d77ce7a81e  docker.io/rockylinux/rockylinux:9  /bin/bash   19 minutes ago  Up 19 minutes ago              hungry_shamir
+d28cb41045e9  docker.io/rockylinux/rockylinux:9  /bin/bash   5 minutes ago   Up 5 minutes ago               mycontainer
+
+
+[student@redhat90 ~]$ podman stop mycontainer
+
+WARN[0010] StopSignal SIGTERM failed to stop container mycontainer in 10 seconds, resorting to SIGKILL 
+mycontainer
+
+[student@redhat90 ~]$ podman ps -a
+CONTAINER ID  IMAGE                              COMMAND     CREATED         STATUS                       PORTS       NAMES
+c2d77ce7a81e  docker.io/rockylinux/rockylinux:9  /bin/bash   22 minutes ago  Up 22 minutes ago                        hungry_shamir
+d28cb41045e9  docker.io/rockylinux/rockylinux:9  /bin/bash   7 minutes ago   Exited (137) 14 seconds ago              mycontainer
+ 
+
+[student@redhat90 ~]$ podman start mycontainer
+
+mycontainer
+
+[student@redhat90 ~]$ podman exec -it mycontainer /bin/bash
+[root@d28cb41045e9 /]# exit
+
+[student@redhat90 ~]$ podman pause mycontainer
+
+d28cb41045e9b98bd4c9e03d6b6a1199519b6aabb25753a6faebfb75af3cccc7
+
+[student@redhat90 ~]$ podman ps -a
+
+CONTAINER ID  IMAGE                              COMMAND     CREATED         STATUS             PORTS       NAMES
+c2d77ce7a81e  docker.io/rockylinux/rockylinux:9  /bin/bash   26 minutes ago  Up 26 minutes ago              hungry_shamir
+d28cb41045e9  docker.io/rockylinux/rockylinux:9  /bin/bash   12 minutes ago  Paused                         mycontainer
+
+[student@redhat90 ~]$ podman unpause mycontainer
+
+d28cb41045e9b98bd4c9e03d6b6a1199519b6aabb25753a6faebfb75af3cccc7
+
+[student@redhat90 ~]$ podman ps -a
+
+CONTAINER ID  IMAGE                              COMMAND     CREATED         STATUS                 PORTS       NAMES
+c2d77ce7a81e  docker.io/rockylinux/rockylinux:9  /bin/bash   26 minutes ago  Up 26 minutes ago                  hungry_shamir
+d28cb41045e9  docker.io/rockylinux/rockylinux:9  /bin/bash   12 minutes ago  Up About a minute ago              mycontainer
+
+
+[student@redhat90 ~]$ podman commit mycontainer myrocky_image
+
+Getting image source signatures
+Copying blob f9961ae81d19 skipped: already exists  
+Copying blob 284549ee7b79 done  
+Copying config 384b4916cc done  
+Writing manifest to image destination
+Storing signatures
+384b4916cc26b9079b3a4b2685e349b8355d4a54bc25ac4c1eb3b4033d1f0180
+
+[student@redhat90 ~]$ podman images
+
+REPOSITORY                       TAG         IMAGE ID      CREATED        SIZE
+localhost/myrocky_image          latest      384b4916cc26  3 seconds ago  244 MB
+docker.io/rockylinux/rockylinux  9           686e4558d0a5  4 months ago   244 MB
+docker.io/rockylinux/rockylinux  latest      523ffac7fb2e  4 years ago    202 MB
+[student@redhat90 ~]$ 
+
+
+[student@redhat90 ~]$ podman rm mycontainer2
+71fb801a7330ad9d5b8a29c754f0fe38c01baa291989faf0dd21dc16201da370
+
+podman rmi localhost/myrhel_image
+
+.........................................BUILDING A CONTAINER FROM SCRATCH...................................
+
+
+
+
+
+[root@redhat90 ~]# buildah from scratch
+working-container
+
+[root@redhat90 ~]# mnt=$(buildah mount working-container)
+
+[root@redhat90 ~]# echo $mnt
+/var/lib/containers/storage/overlay/82c921359fc754ef7b8589f802d17073181c1b3ce46179ce3dd67d548c0ecf83/merged
+
+
+[root@redhat90 ~]# sudo dnf install --installroot $mnt --releasever 9 -y coreutils bash dnf
+BaseOS Packages Red Hat Enterprise Linux 9                                                     87 MB/s | 1.7 MB     00:00    
+AppStream Packages Red Hat Enterprise 9                                                        79 MB/s | 5.8 MB     00:00    
+Last metadata expiration check: 0:00:01 ago on Tue 20 Oct 2026 01:37:52 PM EDT.
+Dependencies resolved.
+==============================================================================================================================
+ Package                                Architecture      Version                                  Repository            Size
+==============================================================================================================================
+Installing:
+ bash                                   x86_64            5.1.8-4.el9                              BaseOS               1.7 M
+ coreutils                              x86_64            8.32-31.el9                              BaseOS               1.2 M
+ dnf   
+ ...
+ 
+ [root@redhat90 ~]# buildah run working-container bash
+bash-5.1# exit
+
+
+[root@redhat90 ~]# buildah commit working-container-3 rockyrhelhybrid:latest
+
+Getting image source signatures
+Copying blob ff4906c6147f done  
+Copying config 68ddefacb1 done  
+Writing manifest to image destination
+Storing signatures
+68ddefacb138c7567a0f478bf2142d0c6ffecba5c7bfdead4889e5153a0ae7fc
+
+[root@redhat90 ~]# podman images
+
+REPOSITORY                 TAG         IMAGE ID      CREATED         SIZE
+localhost/rockyrhelhybrid  latest      68ddefacb138  25 seconds ago  279 MB
+bash
+bash-5.1# 
+
+
+       
+
+
+
+
+
+
+
+

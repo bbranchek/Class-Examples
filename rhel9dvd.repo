@@ -1,0 +1,15 @@
+[BaseOS]
+name =BaseOS Packages Red Hat Enterprise Linux 9
+metadata_expire=-1
+gpgcheck=1
+enabled=1
+baseurl=file:///run/media/student/RHEL-9-0-0-BaseOS-x86_64/BaseOS/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+[AppStream]
+name=AppStream Packages Red Hat Enterprise 9
+metadata_expire=-1
+gpgcheck=1
+enabled=1
+baseurl=file:///run/media/student/RHEL-9-0-0-BaseOS-x86_64/AppStream/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release

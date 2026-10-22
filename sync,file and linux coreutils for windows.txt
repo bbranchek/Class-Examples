@@ -1,0 +1,8 @@
+coreutils for Windows
+https://github.com/microsoft/coreutils/releases/tag/v2026.9.3
+
+file for Windows
+https://github.com/file-go/fil/releases
+
+sync for Windows
+https://learn.microsoft.com/en-us/sysinternals/downloads/sync
